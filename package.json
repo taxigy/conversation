@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/taxigy/conversation#readme",
   "devDependencies": {
+    "ava": "^0.15.2",
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
     "babel-polyfill": "^6.9.1",
@@ -32,5 +33,21 @@
   },
   "dependencies": {
     "redux": "^3.5.2"
+  },
+  "babel": {
+    "stage": 0
+  },
+  "ava": {
+    "require": [
+      "babel-register",
+      "babel-polyfill"
+    ],
+    "babel": "inherit",
+    "files": ["test/**/*.js"],
+    "source": [
+      "**/*.js",
+      "!build/**/*"
+    ],
+    "tap": true
   }
 }
