@@ -9,7 +9,7 @@ const store = createStore(combineReducers({
   branches
 }));
 
-export default function conversation({user, step, ...rest} = {}) {
+export default async function conversation({user, step, ...rest} = {}) {
   const {
     branches: {
       [user]: current
@@ -29,7 +29,7 @@ export default function conversation({user, step, ...rest} = {}) {
       user,
       next
     });
-  } else {
+  } else if (current) {
     const next = current({
       ...rest,
       user,
@@ -48,5 +48,7 @@ export default function conversation({user, step, ...rest} = {}) {
         user
       });
     }
+  } else {
+    console.error(`No conversation branch for user=${user}`);
   }
 }

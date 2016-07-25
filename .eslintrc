@@ -4,10 +4,7 @@
     "consistent-return": 2,
     "curly": [2, "multi-line"],
     "eqeqeq": 2,
-    "generator-star-spacing": [1, {
-      "before": false,
-      "after": true
-    }],
+    "generator-star-spacing": 0,
     "indent": [2, 2],
     "key-spacing": [2, {
       "beforeColon": false,
@@ -52,7 +49,8 @@
     "no-undefined": 2,
     "no-unused-vars": 2,
     "no-void": 2,
-    "no-with": 2
+    "no-with": 2,
+    "babel/generator-star-spacing": 1
   },
   "env": {
     "es6": true,
@@ -71,5 +69,5 @@
     "spread": true,
     "templateStrings": true,
   },
-  "plugins": []
+  "plugins": ["babel"]
 }
