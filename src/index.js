@@ -1,5 +1,6 @@
 import { createStore, combineReducers } from 'redux';
 import branches, {
+  NEW_MESSAGE,
   NEW_CONVERSATION,
   END_CONVERSATION,
   CONTINUE_CONVERSATION
@@ -9,12 +10,18 @@ const store = createStore(combineReducers({
   branches
 }));
 
-export default async function conversation({user, step, ...rest} = {}) {
+export default async function conversation({user, message, step, ...rest} = {}) {
   const {
     branches: {
       [user]: current
     }
   } = store.getState();
+
+  store.dispatch({
+    type: NEW_MESSAGE,
+    user,
+    message
+  });
 
   if (!current && rest.conversation) {
     const current = rest.conversation;
