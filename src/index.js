@@ -10,7 +10,7 @@ const store = createStore(combineReducers({
   branches
 }));
 
-export default async function conversation({user, message, step, ...rest} = {}) {
+export default async function conversation({bot, user, message, ...rest} = {}) {
   const {
     branches: {
       [user]: current
@@ -23,12 +23,12 @@ export default async function conversation({user, message, step, ...rest} = {}) 
     message
   });
 
-  if (!current && rest.conversation) {
-    const current = rest.conversation;
-    const next = current({
+  if (!current && rest.branches) {
+    const current = rest.branches;
+    const next = await current({
       ...rest,
-      user,
-      step
+      bot,
+      user
     });
 
     store.dispatch({
@@ -37,10 +37,10 @@ export default async function conversation({user, message, step, ...rest} = {}) 
       next
     });
   } else if (current) {
-    const next = current({
+    const next = await current({
       ...rest,
-      user,
-      step
+      bot,
+      user
     });
 
     if (next) {
