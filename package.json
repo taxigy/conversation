@@ -4,6 +4,7 @@
   "description": "Conversation engine with Redux",
   "main": "build/index.js",
   "scripts": {
+    "build": "webpack",
     "test": "ava"
   },
   "repository": {
@@ -41,7 +42,7 @@
     "redux-actions": "^0.10.1"
   },
   "babel": {
-    "stage": 0
+    "presets": ["stage-0", "es2015"]
   },
   "ava": {
     "require": [
@@ -50,10 +51,10 @@
     ],
     "babel": "inherit",
     "files": [
-      "test/**/*.js"
+      "tests/**/*.js"
     ],
     "source": [
-      "**/*.js",
+      "src/**/*.js",
       "!build/**/*"
     ],
     "tap": true

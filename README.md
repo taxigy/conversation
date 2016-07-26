@@ -14,18 +14,18 @@ const branches = async (outcomes) => ({
   'Goodbye': async (outcomes) => ({})[outcomes.intent]
 })[outcomes.intent];
 
-controller.on('direct_message', (bot, message) => {
+controller.on('direct_message', async (bot, message) => {
   try {
     const {
       user,
       text
     } = message;
-    const outcomes = await client.message(text, {});
-    const reply = await conversation({
+    const outcomes = await wit.message(text, {});
+    await conversation({
       user,
       message,
       branches, // will be used if there's no current conversation
-      outcomes // will be applied with a function returned by branch, branch(...), branch(...)(...), etc
+      outcomes // will be passed to a function returned by branch, branch(...), branch(...)(...), etc
     });
   } catch (error) {
     console.error(error);

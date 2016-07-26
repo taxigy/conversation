@@ -1,61 +1,67 @@
 import { createStore, combineReducers } from 'redux';
 import branches, {
-  NEW_MESSAGE,
-  NEW_CONVERSATION,
-  END_CONVERSATION,
-  CONTINUE_CONVERSATION
+  RECEIVE_MESSAGE,
+  KEEP_CONVERSATION,
+  END_CONVERSATION
 } from './modules/branches';
 
 const store = createStore(combineReducers({
   branches
 }));
 
-export default async function conversation({bot, user, message, ...rest} = {}) {
+export default async function conversation({bot, message, branches, ...rest} = {}) {
+  if (!bot || !message || !branches) {
+    throw new Error('I want your bot, your message and your branches.');
+  }
+
   const {
     branches: {
-      [user]: current
+      [message.user]: current
     }
   } = store.getState();
 
   store.dispatch({
-    type: NEW_MESSAGE,
-    user,
+    type: RECEIVE_MESSAGE,
     message
   });
 
-  if (!current && rest.branches) {
-    const current = rest.branches;
+  if (!current && branches) {
+    const current = branches;
     const next = await current({
-      ...rest,
       bot,
-      user
+      message,
+      ...rest
     });
 
     store.dispatch({
-      type: NEW_CONVERSATION,
-      user,
-      next
+      type: KEEP_CONVERSATION,
+      message,
+      branches: next
     });
+
+    return next;
   } else if (current) {
     const next = await current({
-      ...rest,
       bot,
-      user
+      message,
+      ...rest
     });
 
     if (next) {
       store.dispatch({
-        type: CONTINUE_CONVERSATION,
-        user,
-        next
+        type: KEEP_CONVERSATION,
+        message,
+        branches: next
       });
     } else {
       store.dispatch({
         type: END_CONVERSATION,
-        user
+        message
       });
     }
+
+    return next;
   } else {
-    console.error(`No conversation branch for user=${user}`);
+    return null;
   }
 }
