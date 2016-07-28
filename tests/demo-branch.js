@@ -12,6 +12,17 @@ const branches = ({bot, user, message, outcomes}) => {
     const {
       projected_time_period
     } = entities;
+    const response = ({bot, message, outcomes}) => {
+      if (!outcomes.entities.projected_time_period) {
+        bot.reply(message, 'Please provide projected_time_period');
+
+        return response;
+      } else {
+        bot.reply(message, 'Get well soon!');
+
+        return null;
+      }
+    };
 
     if (projected_time_period) {
       bot.reply(message, `Get well soon, <@${user}>.`);

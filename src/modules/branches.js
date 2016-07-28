@@ -63,7 +63,7 @@ export default handleActions({
 
     if (!user) {
       console.error(`The state hasn't been changed because there's no such user=${user}.`);
-      
+
       return state;
     } else {
       const {

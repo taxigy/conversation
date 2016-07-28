@@ -12,42 +12,24 @@ const store = createStore(combineReducers({
 export default async function conversation({bot, message, branches, ...rest} = {}) {
   if (!bot || !message || !branches) {
     throw new Error('I want your bot, your message and your branches.');
-  }
-
-  const {
-    branches: {
-      [message.user]: current
-    }
-  } = store.getState();
-
-  store.dispatch({
-    type: RECEIVE_MESSAGE,
-    message
-  });
-
-  if (!current && branches) {
-    const current = branches;
-    const next = await current({
+  } else {
+    const {
+      branches: {
+        [message.user]: current
+      }
+    } = store.getState();
+    const next = await (current || branches)({
       bot,
       message,
       ...rest
     });
 
     store.dispatch({
-      type: KEEP_CONVERSATION,
-      message,
-      branches: next
+      type: RECEIVE_MESSAGE,
+      message
     });
 
-    return next;
-  } else if (current) {
-    const next = await current({
-      bot,
-      message,
-      ...rest
-    });
-
-    if (next) {
+    if (next instanceof Function) {
       store.dispatch({
         type: KEEP_CONVERSATION,
         message,
@@ -56,12 +38,9 @@ export default async function conversation({bot, message, branches, ...rest} = {
     } else {
       store.dispatch({
         type: END_CONVERSATION,
-        message
+        message,
+        branches: next
       });
     }
-
-    return next;
-  } else {
-    return null;
   }
 }
